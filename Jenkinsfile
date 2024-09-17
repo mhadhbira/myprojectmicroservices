@@ -6,10 +6,6 @@ pipeline {
         PATH = "${JAVA_HOME}/bin:${env.PATH}"
     }
 
-    tools {
-        maven 'Maven 3.23'  // Ensure Maven is installed and configured in Jenkins
-    }
-
     stages {
         stage('Checkout') {
             steps {
