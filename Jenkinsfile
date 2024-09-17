@@ -7,14 +7,14 @@ pipeline {
     }
 
     tools {
-        maven 'Maven 3.8.4'  // Ensure Maven is installed and configured in Jenkins
+        maven 'Maven 3.23'  // Ensure Maven is installed and configured in Jenkins
     }
 
     stages {
         stage('Checkout') {
             steps {
                 // Clone the repository
-                git url: 'https://github.com/yourusername/your-spring-boot-project.git', branch: 'main'
+                git url: 'https://github.com/mhadhbira/myprojectmicroservices.git', branch: 'master'
             }
         }
 
