@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        PATH = "${JAVA_HOME}/bin:${env.PATH}"
         DB_URL = "jdbc:postgresql://localhost:5432/MyFirstDatabase"
         DB_USERNAME = "postgres"
         DB_PASSWORD = "rania"
@@ -20,13 +19,13 @@ pipeline {
             steps {
                 script {
                     // Run PostgreSQL container in the background
-                    docker.image('postgres:13').withRun('-e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=rania -e POSTGRES_DB=MyFirstDatabase -p 5432:5432') { postgres ->
-                        // Wait for PostgreSQL to start
-                        sleep 10
+                    bat 'docker run -d --name postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=rania -e POSTGRES_DB=MyFirstDatabase -p 5432:5432 postgres:13'
+                    
+                    // Wait for PostgreSQL to start
+                    bat 'timeout /t 10'
 
-                        // Now build the Spring Boot application
-                        sh 'mvn clean package -DskipTests'
-                    }
+                    // Now build the Spring Boot application using Windows commands
+                    bat './mvnw clean package -DskipTests'
                 }
             }
         }
@@ -34,23 +33,19 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Run PostgreSQL container again for testing
-                    docker.image('postgres:13').withRun('-e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=rania -e POSTGRES_DB=MyFirstDatabase -p 5432:5432') { postgres ->
-                        // Wait for PostgreSQL to start
-                        sleep 10
-
-                        // Run unit tests
-                        sh 'mvn test'
-                    }
+                    bat 'docker start postgres'
+                    bat 'timeout /t 10'
+                    
+                    // Run unit tests
+                    bat './mvnw test'
                 }
             }
         }
 
         stage('SonarQube Analysis') {  // Optional step for code quality analysis
             steps {
-                // Run SonarQube analysis
-                withSonarQubeEnv('SonarQube') {  // Ensure SonarQube is configured in Jenkins
-                    sh 'mvn sonar:sonar'
+                withSonarQubeEnv('SonarQube') {
+                    bat './mvnw sonar:sonar'
                 }
             }
         }
@@ -58,7 +53,7 @@ pipeline {
         stage('Package') {
             steps {
                 // Package the application
-                sh 'mvn package'
+                bat './mvnw package'
             }
         }
     }
@@ -66,9 +61,17 @@ pipeline {
     post {
         success {
             echo 'Build and tests succeeded.'
+            // Stop PostgreSQL container
+            bat 'docker stop postgres'
+            // Optionally remove the container
+            bat 'docker rm postgres'
         }
         failure {
             echo 'Build or tests failed.'
+            // Stop PostgreSQL container
+            bat 'docker stop postgres'
+            // Optionally remove the container
+            bat 'docker rm postgres'
         }
     }
 }
