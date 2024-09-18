@@ -3,6 +3,9 @@ pipeline {
 
     environment {
         PATH = "${JAVA_HOME}/bin:${env.PATH}"
+        DB_URL = "jdbc:postgresql://localhost:5432/MyFirstDatabase"
+        DB_USERNAME = "postgres"
+        DB_PASSWORD = "rania"
     }
 
     stages {
