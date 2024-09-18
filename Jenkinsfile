@@ -62,17 +62,10 @@ pipeline {
     post {
         success {
             echo 'Build and tests succeeded.'
-            // Stop PostgreSQL container
-            sh 'docker stop postgres'
-            // Optionally remove the container
-            sh 'docker rm postgres'
         }
         failure {
             echo 'Build or tests failed.'
-            // Stop PostgreSQL container
-            sh 'docker stop postgres'
-            // Optionally remove the container
-            sh 'docker rm postgres'
+
         }
     }
 }
