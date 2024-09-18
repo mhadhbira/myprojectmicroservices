@@ -7,6 +7,16 @@ pipeline {
         DB_USERNAME = "postgres"
         DB_PASSWORD = "rania"
     }
+     services {
+        postgres {
+            image 'postgres:13'
+            environment {
+                POSTGRES_USER = 'MyFirstDatabase'
+                POSTGRES_PASSWORD = 'postgres'
+                POSTGRES_DB = 'rania'
+            }
+        }
+    }
 
     stages {
         stage('Checkout') {
