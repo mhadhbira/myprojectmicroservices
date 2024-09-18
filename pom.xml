@@ -102,7 +102,17 @@
     <artifactId>mockito-core</artifactId>
     <scope>test</scope>
 </dependency>
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>42.3.1</version> <!-- Ensure you use the appropriate version -->
+</dependency>
 
+<dependency>
+    <groupId>org.hibernate.orm</groupId>
+    <artifactId>hibernate-core</artifactId>
+    <version>6.5.2.Final</version> <!-- Same version as reported in your error -->
+</dependency>
 	</dependencies>
 	
 	<dependencyManagement>
