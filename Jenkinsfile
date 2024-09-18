@@ -7,17 +7,6 @@ pipeline {
         DB_USERNAME = "postgres"
         DB_PASSWORD = "rania"
     }
-    
-    services {
-        postgres {
-            image 'postgres:13'
-            environment {
-                POSTGRES_USER = 'MyFirstDatabase'
-                POSTGRES_PASSWORD = 'postgres'
-                POSTGRES_DB = 'rania'
-            }
-        }
-    }
 
     stages {
         stage('Checkout') {
@@ -27,17 +16,33 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Run PostgreSQL and Build') {
             steps {
-                // Clean and build the project using Maven
-                sh 'mvn clean package -DskipTests'
+                script {
+                    // Run PostgreSQL container in the background
+                    docker.image('postgres:13').withRun('-e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=rania -e POSTGRES_DB=MyFirstDatabase -p 5432:5432') { postgres ->
+                        // Wait for PostgreSQL to start
+                        sleep 10
+
+                        // Now build the Spring Boot application
+                        sh 'mvn clean package -DskipTests'
+                    }
+                }
             }
         }
 
         stage('Test') {
             steps {
-                // Run unit tests
-                sh 'mvn test'
+                script {
+                    // Run PostgreSQL container again for testing
+                    docker.image('postgres:13').withRun('-e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=rania -e POSTGRES_DB=MyFirstDatabase -p 5432:5432') { postgres ->
+                        // Wait for PostgreSQL to start
+                        sleep 10
+
+                        // Run unit tests
+                        sh 'mvn test'
+                    }
+                }
             }
         }
 
