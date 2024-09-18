@@ -7,7 +7,8 @@ pipeline {
         DB_USERNAME = "postgres"
         DB_PASSWORD = "rania"
     }
-     services {
+    
+    services {
         postgres {
             image 'postgres:13'
             environment {
