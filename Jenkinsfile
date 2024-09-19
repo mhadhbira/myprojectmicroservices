@@ -18,7 +18,6 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    sh 'docker start postgres'
                     sh 'sleep 10'
 
                     // Run unit tests
