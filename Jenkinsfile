@@ -19,7 +19,8 @@ pipeline {
             steps {
                 script {
                     sh 'sleep 10'
-
+                    // Ensure mvnw is executable
+                    sh 'chmod +x mvnw'
                     // Run unit tests
                     sh './mvnw test'
                 }
