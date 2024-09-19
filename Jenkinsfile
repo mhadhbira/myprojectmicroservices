@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DB_URL = "jdbc:postgresql://localhost:5432/MyFirstDatabase"
+        DB_URL = "jdbc:postgresql://172.20.10.7:5432/MyFirstDatabase"
         DB_USERNAME = "postgres"
         DB_PASSWORD = "rania"
     }
