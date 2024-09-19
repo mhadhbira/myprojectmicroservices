@@ -15,21 +15,6 @@ pipeline {
             }
         }
 
-        stage('Run PostgreSQL and Build') {
-            steps {
-                script {
-                    // Run PostgreSQL container in the background
-                    sh 'docker run -d --name postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=rania -e POSTGRES_DB=MyFirstDatabase -p 5432:5432 postgres:13'
-
-                    // Wait for PostgreSQL to start
-                    sh 'sleep 10'
-
-                    // Now build the Spring Boot application using Maven
-                    sh './mvnw clean package -DskipTests'
-                }
-            }
-        }
-
         stage('Test') {
             steps {
                 script {
